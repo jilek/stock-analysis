@@ -44,14 +44,17 @@ Sub DQAnalysis()
 End Sub
 
 Sub AllStocksAnalysis()
+
+    '1) Format the output sheet on the "All Stocks Analysis" worksheet.
     Worksheets("All Stocks Analysis").Activate
     Worksheets("All Stocks Analysis").Cells.Clear
+    Range("A1").Value = "All Stocks (2018)"
+    'Create a header row
+    Cells(3, 1).Value = "Ticker"
+    Cells(3, 2).Value = "Total Daily Volume"
+    Cells(3, 3).Value = "Return"
     
-    'Range("A1").Value = "All Stocks (2018)"
-    'Cells(3, 1).Value = "Tcker"
-    'Cells(3, 2).Value = "Total Daily Volume"
-    'Cells(3, 3).Value = "Return"
-    
+    '2) Initialize an array of all tickers.
     Dim tickers(12) As String
     tickers(0) = "AY"
     tickers(1) = "CSIQ"
@@ -66,14 +69,58 @@ Sub AllStocksAnalysis()
     tickers(10) = "TERP"
     tickers(11) = "VSLR"
     
-    nrows = 10
-    ncols = 10
-    For row = 0 To nrows - 1
-        ticker = tickers(row)
-        For col = 0 To ncols - 1
-            'Cells(row+1, col+1).Value = ticker
-            Cells(row + 1, col + 1).Value = row + col
-        Next col
-    Next row
+    '3) Prepare for the analysis of tickers.
+    '3a) Initialize variables for the starting price and ending price.
+    Dim startingPrice As Single
+    Dim endingprice As Single
+    
+    '3b) Activate the data worksheet.
+    Worksheets("2018").Activate
+    
+    '3c) Find the number of rows to loop over.
+    RowCount = Cells(Rows.Count, "A").End(xlUp).row
+    
+    '4) Loop through the tickers.
+    For i = 0 To 11
+        ticker = tickers(i)
+        totalVolume = 0
+        
+        '5) Loop through rows in the data.
+        Worksheets("2018").Activate
+        For j = 2 To RowCount
+        
+            '5a) Find the total volume for the current ticker.
+            If Cells(j, 1).Value = ticker Then
+                totalVolume = totalVolume + Cells(j, 8).Value
+            End If
+            
+            '5b) Find the starting price for the current ticker.
+            If Cells(j - 1, 1).Value <> ticker And Cells(j, 1).Value = ticker Then
+                startingPrice = Cells(j, 6).Value
+            End If
+            
+            '5c) Find the ending price for the current ticker.
+            If Cells(j + 1, 1).Value <> ticker And Cells(j, 1).Value = ticker Then
+                endingprice = Cells(j, 6).Value
+            End If
+        Next j
+        
+        '6) Output the data for the current ticker.
+        Worksheets("All Stocks Analysis").Activate
+        Cells(4 + i, 1).Value = ticker
+        Cells(4 + i, 2).Value = totalVolume
+        Cells(4 + i, 3).Value = endingprice / startingPrice - 1
+    
+    Next i
+    
+    'nrows = 10
+    'ncols = 10
+    'For row = 0 To nrows - 1
+    '    ticker = tickers(row)
+    '    For col = 0 To ncols - 1
+    '        'Cells(row+1, col+1).Value = ticker
+    '        Cells(row + 1, col + 1).Value = row + col
+    '    Next col
+    'Next row
    
 End Sub
