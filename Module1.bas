@@ -150,3 +150,22 @@ Sub formatAllStocksAnalysisTable()
     Next i
 End Sub
 
+Sub foo()
+Dim x As integ
+x = 42
+MsgBox ("hello" + x)
+End Sub
+
+Sub ClearWorksheel()
+    Cells.Clear
+End Sub
+
+Sub yearValueAnalysis()
+    yearValue = InputBox("What year would you like to run the analysis on?")
+    Range("A1").Value = "All Stocks (" + yearValue + ")"
+    Worksheets(yearValue).Activate
+    
+    Worksheets("All Stocks Analysis").Activate
+    Worksheets("All Stocks Analysis").Cells.Clear
+   
+End Sub
