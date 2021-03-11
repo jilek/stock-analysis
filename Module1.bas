@@ -44,9 +44,15 @@ Sub DQAnalysis()
 End Sub
 
 Sub AllStocksAnalysis()
+    Dim startTime As Single
+    Dim endTime As Single
+    
+    yearValue = InputBox("What year would you like to run the analysis on?")
+    startTime = Timer
 
     '1) Format the output sheet on the "All Stocks Analysis" worksheet.
-    Worksheets("All Stocks Analysis").Activate
+    'Worksheets("All Stocks Analysis").Activate
+    Range("A1").Value = "All Stocks (" + yearValue + ")"
     Worksheets("All Stocks Analysis").Cells.Clear
     Range("A1").Value = "All Stocks (2018)"
     'Create a header row
@@ -75,7 +81,8 @@ Sub AllStocksAnalysis()
     Dim endingprice As Single
     
     '3b) Activate the data worksheet.
-    Worksheets("2018").Activate
+    'Worksheets("2018").Activate
+    Worksheets(yearValue).Activate
     
     '3c) Find the number of rows to loop over.
     RowCount = Cells(Rows.Count, "A").End(xlUp).row
@@ -113,6 +120,8 @@ Sub AllStocksAnalysis()
     
     Next i
     
+    endTime = Timer
+    MsgBox "This code ran n " & (endTime - startTime) & " seconds for the year " & (yearValue)
     'nrows = 10
     'ncols = 10
     'For row = 0 To nrows - 1
@@ -151,9 +160,9 @@ Sub formatAllStocksAnalysisTable()
 End Sub
 
 Sub foo()
-Dim x As integ
-x = 42
-MsgBox ("hello" + x)
+    Dim x As integ
+    x = 42
+    MsgBox ("hello" + x)
 End Sub
 
 Sub ClearWorksheel()
